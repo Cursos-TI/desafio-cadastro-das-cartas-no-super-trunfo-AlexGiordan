@@ -30,10 +30,10 @@ int main() {
 
     Carta *Baralho = malloc(QuantidadeCartas * sizeof(Carta));
     if (!Baralho) {
-        printf(">> Erro ao alocar memoria.\n");
+        printf(">> Erro ao alocar memória.\n");
         return 1;
     }
-    printf(">> Memoria alocada com sucesso.\n");
+    printf(">> Memória alocada com sucesso.\n");
 
     int used[8][4] = {0};
     srand((unsigned)time(NULL));
@@ -49,7 +49,7 @@ int main() {
             if (strlen(buffer) < 1) continue;
             Baralho[i].Estado = (char)toupper(buffer[0]);
             if (Baralho[i].Estado >= 'A' && Baralho[i].Estado <= 'H') break;
-            printf(">> Estado invalido! Use A..H.\n");
+            printf(">> Estado inválido! Use A..H.\n");
         }
 
         int e = Baralho[i].Estado - 'A';
@@ -71,11 +71,11 @@ int main() {
         fgets(Baralho[i].NomeCidade, sizeof(Baralho[i].NomeCidade), stdin);
         limpar_nova_linha(Baralho[i].NomeCidade);
 
-        printf(">>> Informe a populacao:\n");
+        printf(">>> Informe a população:\n");
         fgets(buffer, sizeof(buffer), stdin);
         Baralho[i].Populacao = atoi(buffer);
 
-        printf(">>> Informe a area total:\n");
+        printf(">>> Informe a área total:\n");
         fgets(buffer, sizeof(buffer), stdin);
         Baralho[i].Area = atof(buffer);
 
@@ -83,7 +83,7 @@ int main() {
         fgets(buffer, sizeof(buffer), stdin);
         Baralho[i].PIB = atof(buffer);
 
-        printf(">>> Informe o numero de pontos turisticos:\n");
+        printf(">>> Informe o número de pontos turisticos:\n");
         fgets(buffer, sizeof(buffer), stdin);
         Baralho[i].NumeroPontosTuristicos = atoi(buffer);
     }
@@ -92,19 +92,19 @@ int main() {
     printf("> Exibindo cadastro das cartas.\n");
 
     for (int i = 0; i < QuantidadeCartas; i++) {
-        printf("\n----\n");
-        printf("Carta: %d \n", i + 1);
-        printf("Estado: %c\n", Baralho[i].Estado);
-        printf("Codigo: %s\n", Baralho[i].CodigoCarta);
-        printf("Nome da cidade: %s\n", Baralho[i].NomeCidade);
-        printf("Populacao: %d\n", Baralho[i].Populacao);
-        printf("Area: %.2f\n", Baralho[i].Area);
-        printf("PIB: %.2f\n", Baralho[i].PIB);
-        printf("Numero de pontos turisticos: %d\n", Baralho[i].NumeroPontosTuristicos);
-        printf("----\n");
+        printf(">> ___________________________________________________________\n");
+        printf(">> CARTA                       : %d \n", i + 1);
+        printf(">> ESTADO                      : %c\n", Baralho[i].Estado);
+        printf(">> CÓDIGO DA CARTA             : %s\n", Baralho[i].CodigoCarta);
+        printf(">> NOME DA CIDADE              : %s\n", Baralho[i].NomeCidade);
+        printf(">> POPULAÇÃO                   : %d\n", Baralho[i].Populacao);
+        printf(">> ÁREA                        : %.2f\n", Baralho[i].Area);
+        printf(">> PIB                         : %.2f\n", Baralho[i].PIB);
+        printf(">> NÚMERO DE PONTOS TURISTICOS : %d\n", Baralho[i].NumeroPontosTuristicos);
     }
 
     free(Baralho);
+    printf("\n\n");
     printf("Finalizando Cadastro Super Trunfo\n\n");
     return 0;
 }
