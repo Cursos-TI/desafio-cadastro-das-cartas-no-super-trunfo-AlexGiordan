@@ -69,6 +69,7 @@ int main() {
 
         int num;
         do { num = (rand() % 4) + 1; } while (used[e][num - 1]);
+		
         used[e][num - 1] = 1;
 
         snprintf(Baralho[i].CodigoCarta, sizeof(Baralho[i].CodigoCarta),"%c%02d", Baralho[i].Estado, num);
@@ -110,18 +111,11 @@ int main() {
         printf("Area: %f\n", Baralho[i].Area);
         printf("PIB: %f\n", Baralho[i].PIB);
         printf("Numero de pontos turisticos: %d\n", Baralho[i].NumeroPontosTuristicos);
-
         printf("\n----\n");
     }
 
-    printf("\n\n\n");
-    
-    
-
-
-
     printf("Finalizando Cadastro Super Trunfo\n\n");
-
+    printf("\n\n\n");
     free(Baralho);
     return 0;
 }
