@@ -12,6 +12,8 @@ typedef struct {
     float Area;
     float PIB;
     int NumeroPontosTuristicos;
+    float DensidadePopulacional;
+    float PIBPerCapita;
 } Carta;
 
 void limpar_nova_linha(char *str) {
@@ -24,7 +26,7 @@ int main() {
 
     printf("Iniciando Cadastro Super Trunfo\n\n");
 
-    printf("> Informe a quantidade de cartas desejadas:\n");
+    printf("> Informe a quantidade de cartas desejadas: ");
     fgets(buffer, sizeof(buffer), stdin);
     QuantidadeCartas = atoi(buffer);
 
@@ -49,7 +51,7 @@ int main() {
             if (strlen(buffer) < 1) continue;
             Baralho[i].Estado = (char)toupper(buffer[0]);
             if (Baralho[i].Estado >= 'A' && Baralho[i].Estado <= 'H') break;
-            printf(">> Estado inválido! Use A..H.\n");
+            printf(">> Estado inválido! Use A..H.");
         }
 
         int e = Baralho[i].Estado - 'A';
@@ -67,40 +69,51 @@ int main() {
 
         snprintf(Baralho[i].CodigoCarta, sizeof(Baralho[i].CodigoCarta), "%c%02d", Baralho[i].Estado, num);
 
-        printf(">>> Informe o nome da cidade:\n");
+        printf(">>> Informe o nome da cidade: ");
         fgets(Baralho[i].NomeCidade, sizeof(Baralho[i].NomeCidade), stdin);
         limpar_nova_linha(Baralho[i].NomeCidade);
 
-        printf(">>> Informe a população:\n");
+        printf(">>> Informe a população em quantidade nominal: ");
         fgets(buffer, sizeof(buffer), stdin);
         Baralho[i].Populacao = atoi(buffer);
 
-        printf(">>> Informe a área total:\n");
+        printf(">>> Informe a área total em km²: ");
         fgets(buffer, sizeof(buffer), stdin);
         Baralho[i].Area = atof(buffer);
 
-        printf(">>> Informe o PIB:\n");
+        printf(">>> Informe o PIB em bilhôes de reais: ");
         fgets(buffer, sizeof(buffer), stdin);
         Baralho[i].PIB = atof(buffer);
 
-        printf(">>> Informe o número de pontos turisticos:\n");
+        printf(">>> Informe o número de pontos turisticos: ");
         fgets(buffer, sizeof(buffer), stdin);
         Baralho[i].NumeroPontosTuristicos = atoi(buffer);
+
+        printf(">>> Cálculando densidade populacional: \n");
+        Baralho[i].DensidadePopulacional = Baralho[i].Populacao / Baralho[i].Area;
+
+        printf(">>> Cálculando PIB per capita: ");
+        Baralho[i].PIBPerCapita = (Baralho[i].PIB * 1e9) / (float)Baralho[i].Populacao;  
+
+        printf("\n\n");      
     }
 
     printf("> Finalizado cadastro das cartas.\n");
-    printf("> Exibindo cadastro das cartas.\n");
+    printf("> Exibindo cadastro das cartas.\n\n");
 
     for (int i = 0; i < QuantidadeCartas; i++) {
-        printf(">> ___________________________________________________________\n");
+        printf(">> ---------------------------------------------------------------------------------\n");
         printf(">> CARTA                       : %d \n", i + 1);
         printf(">> ESTADO                      : %c\n", Baralho[i].Estado);
         printf(">> CÓDIGO DA CARTA             : %s\n", Baralho[i].CodigoCarta);
         printf(">> NOME DA CIDADE              : %s\n", Baralho[i].NomeCidade);
         printf(">> POPULAÇÃO                   : %d\n", Baralho[i].Populacao);
-        printf(">> ÁREA                        : %.2f\n", Baralho[i].Area);
-        printf(">> PIB                         : %.2f\n", Baralho[i].PIB);
+        printf(">> ÁREA                        : %.2f km²\n", Baralho[i].Area);
+        printf(">> PIB                         : %.2f bilhões de reais\n", Baralho[i].PIB);
         printf(">> NÚMERO DE PONTOS TURISTICOS : %d\n", Baralho[i].NumeroPontosTuristicos);
+        printf(">> DENSIDADE POPULACIONAL      : %.2f hab/km²\n", Baralho[i].DensidadePopulacional);
+        printf(">> PIB PER CAPITA              : %.2f reais\n", Baralho[i].PIBPerCapita); 
+        printf(">> ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\n");               
     }
 
     free(Baralho);
