@@ -8,7 +8,7 @@ typedef struct {
     char Estado;
     char CodigoCarta[4];
     char NomeCidade[30];
-    int Populacao;
+    unsigned long int Populacao;
     float Area;
     float PIB;
     int NumeroPontosTuristicos;
@@ -52,7 +52,7 @@ int main() {
             printf(">>> Informe o Estado (A-H): ");
             fgets(buffer, sizeof(buffer), stdin);
             if (strlen(buffer) < 1) continue;
-            Baralho[i].Estado = (char)toupper(buffer[0]);
+            Baralho[i].Estado = (char)toupper((unsigned char)buffer[0]);
             if (Baralho[i].Estado >= 'A' && Baralho[i].Estado <= 'H') break;
             printf(">> Estado inválido! Use A..H.");
         }
@@ -78,37 +78,57 @@ int main() {
 
         printf(">>> Informe a população em quantidade nominal: ");
         fgets(buffer, sizeof(buffer), stdin);
-        Baralho[i].Populacao = atoi(buffer);
+        {
+            char *end = NULL;
+            unsigned long v = strtoul(buffer, &end, 10);
+            if (end == buffer) v = 0ul;
+            Baralho[i].Populacao = v;
+        }
 
         printf(">>> Informe a área total em km²: ");
         fgets(buffer, sizeof(buffer), stdin);
-        Baralho[i].Area = atof(buffer);
+        Baralho[i].Area = (float)atof(buffer);
 
         printf(">>> Informe o PIB em bilhôes de reais: ");
         fgets(buffer, sizeof(buffer), stdin);
-        Baralho[i].PIB = atof(buffer);
+        Baralho[i].PIB = (float)atof(buffer);
 
         printf(">>> Informe o número de pontos turisticos: ");
         fgets(buffer, sizeof(buffer), stdin);
         Baralho[i].NumeroPontosTuristicos = atoi(buffer);
 
-        printf(">>> Cálculando densidade populacional! \n");
-        Baralho[i].DensidadePopulacional = Baralho[i].Populacao / Baralho[i].Area;
+        printf(">>> Calculando densidade populacional!\n");
+        if (Baralho[i].Area != 0.0f) {
+            Baralho[i].DensidadePopulacional =
+                (float)((double)Baralho[i].Populacao / (double)Baralho[i].Area);
+        } else {
+            Baralho[i].DensidadePopulacional = 0.0f;
+            printf(">>> Atenção: área zero. Densidade definida como 0.0.\n");
+        }
 
-        printf(">>> Cálculando PIB per capita! ");
-        Baralho[i].PIBPerCapita = (Baralho[i].PIB * 1e9) / (float)Baralho[i].Populacao;  
+        printf(">>> Calculando PIB per capita!\n");
+        if (Baralho[i].Populacao != 0ul) {
+            Baralho[i].PIBPerCapita =
+                (float)((Baralho[i].PIB * 1e9) / (double)Baralho[i].Populacao);
+        } else {
+            Baralho[i].PIBPerCapita = 0.0f;
+            printf(">>> Atenção: população zero. PIB per capita definido como 0.0.\n");
+        }
 
-        Baralho[i].SuperPoder = 
-            (float)Baralho[i].Populacao + 
-            (float)Baralho[i].Area +
-            (float)Baralho[i].PIB +
-            (float)Baralho[i].NumeroPontosTuristicos +
-            (float)Baralho[i].PIBPerCapita +
-            (double)(1.0 / Baralho[i].DensidadePopulacional);
+        double termo_inverso_densidade = 0.0;
+        if (Baralho[i].DensidadePopulacional != 0.0f) {
+            termo_inverso_densidade = 1.0 / (double)Baralho[i].DensidadePopulacional;
+        }
 
-            printf(" pica %lf \n", (1.0 / Baralho[i].DensidadePopulacional));
+        Baralho[i].SuperPoder =
+            (double)Baralho[i].Populacao +
+            (double)Baralho[i].Area +
+            (double)Baralho[i].PIB +
+            (double)Baralho[i].NumeroPontosTuristicos +
+            (double)Baralho[i].PIBPerCapita +
+            termo_inverso_densidade;
 
-        printf("\n\n");      
+        printf("\n\n");
     }
 
     printf("> Finalizado cadastro das cartas.\n");
@@ -120,17 +140,16 @@ int main() {
         printf(">> ESTADO                      : %c\n", Baralho[i].Estado);
         printf(">> CÓDIGO DA CARTA             : %s\n", Baralho[i].CodigoCarta);
         printf(">> NOME DA CIDADE              : %s\n", Baralho[i].NomeCidade);
-        printf(">> POPULAÇÃO                   : %d\n", Baralho[i].Populacao);
+        printf(">> POPULAÇÃO                   : %lu\n", Baralho[i].Populacao);          
         printf(">> ÁREA                        : %.2f km²\n", Baralho[i].Area);
         printf(">> PIB                         : %.2f bilhões de reais\n", Baralho[i].PIB);
         printf(">> NÚMERO DE PONTOS TURISTICOS : %d\n", Baralho[i].NumeroPontosTuristicos);
         printf(">> DENSIDADE POPULACIONAL      : %.2f hab/km²\n", Baralho[i].DensidadePopulacional);
-        printf(">> PIB PER CAPITA              : %.2f reais\n", Baralho[i].PIBPerCapita); 
-        printf(">> SUPER PODER                 : %lf \n", Baralho[i].SuperPoder);
-        printf(">> ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\n");               
+        printf(">> PIB PER CAPITA              : %.2f reais\n", Baralho[i].PIBPerCapita);
+        printf(">> SUPER PODER                 : %.6f \n", Baralho[i].SuperPoder);
+        printf(">> ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\n");
     }
 
-    free(Baralho);
     printf("\n\n");
     printf("Finalizando Cadastro Super Trunfo\n\n");
     printf("Comparação de cartas:\n");
@@ -160,25 +179,25 @@ int main() {
     }
 
     if(Baralho[0].DensidadePopulacional <= Baralho[1].DensidadePopulacional){
-        printf("Densidade Populaciona: Carta 1 venceu (1)\n");
+        printf("Densidade Populacional: Carta 1 venceu (1)\n");
     } else {
-        printf("Densidade Populaciona: Carta 2 venceu (0)\n");
-    }  
+        printf("Densidade Populacional: Carta 2 venceu (0)\n");
+    }
 
     if(Baralho[0].PIBPerCapita >= Baralho[1].PIBPerCapita){
         printf("PIB per Capita: Carta 1 venceu (1)\n");
     } else {
         printf("PIB per Capita: Carta 2 venceu (0)\n");
-    } 
+    }
 
     if(Baralho[0].SuperPoder >= Baralho[1].SuperPoder){
         printf("Super Poder: Carta 1 venceu (1)\n");
     } else {
         printf("Super Poder: Carta 2 venceu (0)\n");
-    }                       
-
+    }
 
     printf("Finalizado com sucesso!\n");
 
+    free(Baralho);
     return 0;
 }
