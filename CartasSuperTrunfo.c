@@ -9,20 +9,13 @@ typedef struct {
     char CodigoCarta[4];
     char NomeCidade[30];
     unsigned long int Populacao;
-    unsigned long int Area;
-    unsigned long int PIB;
-    unsigned long int NumeroPontosTuristicos;
+    float Area;
+    float PIB;
+    int NumeroPontosTuristicos;
     float DensidadePopulacional;
     float PIBPerCapita;
     double SuperPoder;
 } Carta;
-
-typedef struct {
-    const char *Carta;
-    double ValueUm;
-    double ValueDois;
-    int MenorValue;
-} Comparacao;
 
 void limpar_nova_linha(char *str) {
     str[strcspn(str, "\n")] = '\0';
@@ -102,30 +95,15 @@ int main() {
 
         printf(">>> Informe a área total em km²: ");
         fgets(buffer, sizeof(buffer), stdin);
-        {
-            char *end = NULL;
-            unsigned long v = strtoul(buffer, &end, 10);
-            if (end == buffer) v = 0ul;
-            Baralho[i].Area = v;
-        }
+        Baralho[i].Area = (float)atof(buffer);
 
         printf(">>> Informe o PIB em bilhôes de reais: ");
         fgets(buffer, sizeof(buffer), stdin);
-        {
-            char *end = NULL;
-            unsigned long v = strtoul(buffer, &end, 10);
-            if (end == buffer) v = 0ul;
-            Baralho[i].PIB = v;
-        }
+        Baralho[i].PIB = (float)atof(buffer);
 
         printf(">>> Informe o número de pontos turisticos: ");
         fgets(buffer, sizeof(buffer), stdin);
-        {
-            char *end = NULL;
-            unsigned long v = strtoul(buffer, &end, 10);
-            if (end == buffer) v = 0ul;
-            Baralho[i].NumeroPontosTuristicos = v;
-        }
+        Baralho[i].NumeroPontosTuristicos = atoi(buffer);
 
         printf(">>> Calculando densidade populacional!\n");
         if (Baralho[i].Area != 0ul) {
@@ -171,9 +149,9 @@ int main() {
         printf(">> CÓDIGO DA CARTA             : %s\n", Baralho[i].CodigoCarta);
         printf(">> NOME DA CIDADE              : %s\n", Baralho[i].NomeCidade);
         printf(">> POPULAÇÃO                   : %lu\n", Baralho[i].Populacao);          
-        printf(">> ÁREA                        : %lu km²\n", Baralho[i].Area);
-        printf(">> PIB                         : %lu bilhões de reais\n", Baralho[i].PIB);
-        printf(">> NÚMERO DE PONTOS TURISTICOS : %lu\n", Baralho[i].NumeroPontosTuristicos);
+        printf(">> ÁREA                        : %.2f km²\n", Baralho[i].Area);
+        printf(">> PIB                         : %.2f bilhões de reais\n", Baralho[i].PIB);
+        printf(">> NÚMERO DE PONTOS TURISTICOS : %d\n", Baralho[i].NumeroPontosTuristicos);
         printf(">> DENSIDADE POPULACIONAL      : %.2f hab/km²\n", Baralho[i].DensidadePopulacional);
         printf(">> PIB PER CAPITA              : %.2f reais\n", Baralho[i].PIBPerCapita);
         printf(">> SUPER PODER                 : %.6f \n", Baralho[i].SuperPoder);
@@ -184,32 +162,49 @@ int main() {
     printf("Finalizando Cadastro Super Trunfo\n\n");
     printf("Comparação de cartas:\n");
 
-    Comparacao PontosAtributos[] = {
-        { "População",             (double)Baralho[0].Populacao,              (double)Baralho[1].Populacao,              0 },
-        { "Área",                  (double)Baralho[0].Area,                   (double)Baralho[1].Area,                   0 },
-        { "PIB",                   (double)Baralho[0].PIB,                    (double)Baralho[1].PIB,                    0 },
-        { "Pontos Turísticos",     (double)Baralho[0].NumeroPontosTuristicos, (double)Baralho[1].NumeroPontosTuristicos, 0 },
-        { "Densidade Populacional",(double)Baralho[0].DensidadePopulacional,  (double)Baralho[1].DensidadePopulacional,  1 },
-        { "PIB per Capita",        (double)Baralho[0].PIBPerCapita,           (double)Baralho[1].PIBPerCapita,           0 },
-        { "Super Poder",           (double)Baralho[0].SuperPoder,             (double)Baralho[1].SuperPoder,             0 }
-    };
-
-    size_t total = sizeof(PontosAtributos) / sizeof(PontosAtributos[0]);
-
-    for (size_t i = 0; i < total; i++) {
-        int ValueUm;
-        if (PontosAtributos[i].MenorValue)
-            ValueUm = PontosAtributos[i].ValueUm <= PontosAtributos[i].ValueDois;
-        else
-            ValueUm = PontosAtributos[i].ValueUm >= PontosAtributos[i].ValueDois;
-
-        printf("%s: Carta %d venceu (%d)\n",
-            PontosAtributos[i].Carta,
-            ValueUm ? 1 : 2,
-            ValueUm ? 1 : 0);
+    if(Baralho[0].Populacao >= Baralho[1].Populacao){
+        printf("População: Carta 1 venceu (1)\n");
+    } else {
+        printf("População: Carta 2 venceu (0)\n");
     }
 
-    printf("Finalizado com sucesso!\n");
+    if(Baralho[0].Area >= Baralho[1].Area){
+        printf("Área: Carta 1 venceu (1)\n");
+    } else {
+        printf("Área: Carta 2 venceu (0)\n");
+    }
+
+    if(Baralho[0].PIB >= Baralho[1].PIB){
+        printf("PIB: Carta 1 venceu (1)\n");
+    } else {
+        printf("PIB: Carta 2 venceu (0)\n");
+    }
+
+    if(Baralho[0].NumeroPontosTuristicos >= Baralho[1].NumeroPontosTuristicos){
+        printf("Pontos Turísticos: Carta 1 venceu (1)\n");
+    } else {
+        printf("Pontos Turísticos: Carta 2 venceu (0)\n");
+    }
+
+    if(Baralho[0].DensidadePopulacional <= Baralho[1].DensidadePopulacional){
+        printf("Densidade Populacional: Carta 1 venceu (1)\n");
+    } else {
+        printf("Densidade Populacional: Carta 2 venceu (0)\n");
+    }
+
+    if(Baralho[0].PIBPerCapita >= Baralho[1].PIBPerCapita){
+        printf("PIB per Capita: Carta 1 venceu (1)\n");
+    } else {
+        printf("PIB per Capita: Carta 2 venceu (0)\n");
+    }
+
+    if(Baralho[0].SuperPoder >= Baralho[1].SuperPoder){
+        printf("Super Poder: Carta 1 venceu (1)\n");
+    } else {
+        printf("Super Poder: Carta 2 venceu (0)\n");
+    }        
+
+    printf("\nFinalizado com sucesso!\n");
 
     free(Baralho);
     return 0;
